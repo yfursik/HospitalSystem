@@ -8,9 +8,9 @@
         Book appointments, schedule vaccinations,
         and access your medical records.
       </p>
-      <button class="primary-button">
+      <RouterLink to="/appointments" class="primary-button">
         Book an Appointment
-      </button>
+      </RouterLink>
     </section>
 
     <section id="services" class="services">
@@ -58,6 +58,7 @@
   line-height: 1.6;
 }
 
+
 .primary-button {
   background-color: #2476bd;
   color: white;
@@ -65,7 +66,11 @@
   padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
+
+  display: inline-block;
+  text-decoration: none;
 }
+
 
 .services {
   margin-top: 40px;
