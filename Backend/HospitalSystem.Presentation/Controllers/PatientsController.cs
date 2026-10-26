@@ -1,7 +1,6 @@
 using HospitalSystem.Domain.Entities;
-using HospitalSystem.Infrastructure.Database;
+using HospitalSystem.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace HospitalSystem.Presentation.Controllers;
 
@@ -9,27 +8,26 @@ namespace HospitalSystem.Presentation.Controllers;
 [Route("api/[controller]")]
 public class PatientsController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IPatientService _patientService;
 
-    public PatientsController(ApplicationDbContext context)
+    public PatientsController(IPatientService patientService)
     {
-        _context = context;
+        _patientService = patientService;
     }
 
     // GET: api/patients
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Patient>>> GetAllPatients()
     {
-        return await _context.Patients.ToListAsync();
+        var patients = await _patientService.GetAllPatientsAsync();
+        return Ok(patients);
     }
 
     // POST: api/patients
     [HttpPost]
     public async Task<ActionResult<Patient>> CreatePatient(Patient patient)
     {
-        _context.Patients.Add(patient);
-        await _context.SaveChangesAsync();
-        
-        return Ok(patient);
+        var createdPatient = await _patientService.CreatePatientAsync(patient);
+        return Ok(createdPatient);
     }
 }

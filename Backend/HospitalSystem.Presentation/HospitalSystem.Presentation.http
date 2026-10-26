@@ -4,3 +4,19 @@ GET {{HospitalSystem.Presentation_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+### Получить список всех пациентов
+GET {{HospitalSystem.Presentation_HostAddress}}/api/patients
+Accept: application/json
+
+###
+
+### Добавить нового пациента
+POST http://localhost:5064/api/patients
+Content-Type: application/json
+
+{
+  "firstName": "Jan",
+  "lastName": "Novak",
+  "personalNumber": "901212/1234"
+}
