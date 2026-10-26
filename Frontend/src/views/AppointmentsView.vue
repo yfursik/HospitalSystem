@@ -4,6 +4,26 @@ import { ref } from 'vue'
 
 const selectedService = ref(null)
 
+const selectedDoctor = ref('')
+const appointmentDate = ref('')
+const appointmentTime = ref('')
+
+const doctors = [
+  { id: 1, name: 'Dr. Emily Carter' },
+  { id: 2, name: 'Dr. James Wilson' },
+  { id: 3, name: 'Dr. Sophia Brown' },
+]
+
+const availableTimes = [
+  '09:00',
+  '10:00',
+  '11:00',
+  '13:00',
+  '14:00',
+  '15:00',
+]
+
+
 const services = [
   {
     id: 1,
@@ -52,10 +72,79 @@ const services = [
       </article>
     </div>
 
+
     <div v-if="selectedService" class="selected-service">
-      Selected service:
-      <strong>{{ selectedService.name }}</strong>
+      <h2>Appointment Details</h2>
+
+      <p>
+        Selected service:
+        <strong>{{ selectedService.name }}</strong>
+      </p>
+
+      <div class="booking-fields">
+        <label>
+          Choose a Doctor
+
+          <select v-model="selectedDoctor">
+            <option disabled value="">
+              Select a doctor
+            </option>
+
+            <option
+              v-for="doctor in doctors"
+              :key="doctor.id"
+              :value="doctor.name"
+            >
+              {{ doctor.name }}
+            </option>
+          </select>
+        </label>
+
+        <label>
+          Appointment Date
+
+          <input
+            v-model="appointmentDate"
+            type="date"
+          />
+        </label>
+
+        <label>
+          Available Time
+
+          <select v-model="appointmentTime">
+            <option disabled value="">
+              Select a time
+            </option>
+
+            <option
+              v-for="time in availableTimes"
+              :key="time"
+              :value="time"
+            >
+              {{ time }}
+            </option>
+          </select>
+        </label>
+      </div>
+
+      <div
+        v-if="selectedDoctor && appointmentDate && appointmentTime"
+        class="booking-preview"
+      >
+        <h3>Appointment Preview</h3>
+
+        <p>Service: {{ selectedService.name }}</p>
+        <p>Doctor: {{ selectedDoctor }}</p>
+        <p>Date: {{ appointmentDate }}</p>
+        <p>Time: {{ appointmentTime }}</p>
+
+        <small>
+          Demo only. Your appointment has not been booked.
+        </small>
+      </div>
     </div>
+
 
     <p class="notice">
       Online booking will be available soon.
@@ -138,5 +227,52 @@ h1 {
   border-radius: 10px;
   color: #163b65;
 }
+
+
+.booking-fields {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(220px, 1fr)
+  );
+  gap: 20px;
+  margin-top: 25px;
+}
+
+.booking-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-weight: 600;
+  color: #163b65;
+}
+
+.booking-fields select,
+.booking-fields input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dbe5ef;
+  border-radius: 8px;
+  background-color: white;
+  color: #233b53;
+  font: inherit;
+}
+
+.booking-preview {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: white;
+  border: 1px solid #c5dceb;
+  border-radius: 10px;
+}
+
+.booking-preview h3 {
+  color: #163b65;
+}
+
+.booking-preview small {
+  color: #6e7c8d;
+}
+
 
 </style>
