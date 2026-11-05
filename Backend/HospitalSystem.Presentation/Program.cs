@@ -1,3 +1,5 @@
+using HospitalSystem.Application.Services;
+using HospitalSystem.Domain.Interfaces;
 using HospitalSystem.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Добавляем поддержку контроллеров для REST API
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 
 // Разрешаем запросы с локального Vue-фронтенда
 builder.Services.AddCors(options =>
