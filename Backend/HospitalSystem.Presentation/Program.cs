@@ -6,6 +6,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Добавляем поддержку контроллеров для REST API
 builder.Services.AddControllers();
 
+// Разрешаем запросы с локального Vue-фронтенда
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173") // Стандартный порт локального сервера Vite
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 // DI: Регистрация паттерна Repository и сервисов
 builder.Services.AddScoped(typeof(HospitalSystem.Domain.Interfaces.IRepository<>), typeof(HospitalSystem.Infrastructure.Repositories.Repository<>));
 builder.Services.AddScoped<HospitalSystem.Domain.Interfaces.IPatientService, HospitalSystem.Application.Services.PatientService>();
@@ -30,6 +41,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowFrontend");
 
 // Включение маршрутизации контроллеров
 app.MapControllers();
