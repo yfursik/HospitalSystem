@@ -25,7 +25,14 @@ public class AppointmentsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Appointment appointment)
     {
-        var created = await _appointmentService.CreateAppointmentAsync(appointment);
-        return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+        try
+        {
+            var created = await _appointmentService.CreateAppointmentAsync(appointment);
+            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }
