@@ -10,6 +10,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
 // Разрешаем запросы с локального Vue-фронтенда
 builder.Services.AddCors(options =>
