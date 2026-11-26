@@ -96,11 +96,22 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
     string[] roles = ["Admin", "Patient"];
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))
             await roleManager.CreateAsync(new IdentityRole(role));
+    }
+
+    var adminEmail = "admin@hospital.cz";
+    if (await userManager.FindByEmailAsync(adminEmail) == null)
+    {
+        var admin = new IdentityUser { UserName = adminEmail, Email = adminEmail };
+        var result = await userManager.CreateAsync(admin, "admin123");
+        if (result.Succeeded)
+            await userManager.AddToRoleAsync(admin, "Admin");
     }
 }
 
