@@ -16,4 +16,27 @@ public class DoctorService : IDoctorService
     {
         return await _repository.GetAllAsync();
     }
+
+    public async Task<Doctor> CreateDoctorAsync(Doctor doctor)
+    {
+        await _repository.AddAsync(doctor);
+        return doctor;
+    }
+
+    public async Task<Doctor> UpdateDoctorAsync(int id, Doctor doctor)
+    {
+        doctor.Id = id;
+        await _repository.UpdateAsync(doctor);
+        return doctor;
+    }
+
+    public async Task<bool> DeleteDoctorAsync(int id)
+    {
+        var existing = await _repository.GetByIdAsync(id);
+        if (existing == null)
+            return false;
+
+        await _repository.DeleteAsync(existing);
+        return true;
+    }
 }

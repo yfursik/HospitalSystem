@@ -19,18 +19,15 @@ public class AppointmentService : IAppointmentService
 
     public async Task<Appointment> CreateAppointmentAsync(Appointment appointment)
     {
-        // 1. Проверяем, что дата приема не из прошлого
         if (appointment.AppointmentDate < DateTime.Now)
         {
             throw new InvalidOperationException("Нельзя записаться на прошедшую дату или время.");
         }
 
-        // 2. Получаем все существующие записи
         var existingAppointments = await _repository.GetAllAsync();
 
-        // 3. Проверяем, свободен ли врач
-        bool isDoctorBusy = existingAppointments.Any(a => 
-            a.DoctorId == appointment.DoctorId && 
+        bool isDoctorBusy = existingAppointments.Any(a =>
+            a.DoctorId == appointment.DoctorId &&
             a.AppointmentDate == appointment.AppointmentDate);
 
         if (isDoctorBusy)
@@ -40,5 +37,42 @@ public class AppointmentService : IAppointmentService
 
         await _repository.AddAsync(appointment);
         return appointment;
+    }
+
+    public async Task<Appointment?> UpdateAppointmentAsync(int id, Appointment updatedAppointment)
+    {
+        var existing = await _repository.GetByIdAsync(id);
+        if (existing == null)
+            return null;
+
+        if (updatedAppointment.AppointmentDate < DateTime.Now)
+            throw new InvalidOperationException("Нельзя перенести запись на прошедшую дату или время.");
+
+        var allAppointments = await _repository.GetAllAsync();
+        bool isDoctorBusy = allAppointments.Any(a =>
+            a.Id != id &&
+            a.DoctorId == updatedAppointment.DoctorId &&
+            a.AppointmentDate == updatedAppointment.AppointmentDate);
+
+        if (isDoctorBusy)
+            throw new InvalidOperationException("Этот врач уже занят на выбранное время.");
+
+        existing.AppointmentDate = updatedAppointment.AppointmentDate;
+        existing.Reason = updatedAppointment.Reason;
+        existing.DoctorId = updatedAppointment.DoctorId;
+        existing.PatientId = updatedAppointment.PatientId;
+
+        await _repository.UpdateAsync(existing);
+        return existing;
+    }
+
+    public async Task<bool> DeleteAppointmentAsync(int id)
+    {
+        var existing = await _repository.GetByIdAsync(id);
+        if (existing == null)
+            return false;
+
+        await _repository.DeleteAsync(existing);
+        return true;
     }
 }

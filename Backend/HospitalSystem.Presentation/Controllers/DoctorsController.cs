@@ -1,4 +1,6 @@
+using HospitalSystem.Domain.Entities;
 using HospitalSystem.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HospitalSystem.Presentation.Controllers;
@@ -19,5 +21,32 @@ public class DoctorsController : ControllerBase
     {
         var doctors = await _doctorService.GetAllDoctorsAsync();
         return Ok(doctors);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Create([FromBody] Doctor doctor)
+    {
+        var created = await _doctorService.CreateDoctorAsync(doctor);
+        return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+    }
+
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Update(int id, [FromBody] Doctor doctor)
+    {
+        var updated = await _doctorService.UpdateDoctorAsync(id, doctor);
+        return Ok(updated);
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var deleted = await _doctorService.DeleteDoctorAsync(id);
+        if (!deleted)
+            return NotFound(new { message = "Врач не найден." });
+
+        return NoContent();
     }
 }
