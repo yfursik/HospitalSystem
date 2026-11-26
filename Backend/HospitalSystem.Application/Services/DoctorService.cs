@@ -14,7 +14,7 @@ public class DoctorService : IDoctorService
 
     public async Task<IEnumerable<Doctor>> GetAllDoctorsAsync()
     {
-        return await _repository.GetAllAsync();
+        return await _repository.GetAllAsync(d => d.Department!);
     }
 
     public async Task<Doctor> CreateDoctorAsync(Doctor doctor)

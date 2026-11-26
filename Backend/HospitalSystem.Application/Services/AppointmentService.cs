@@ -14,7 +14,7 @@ public class AppointmentService : IAppointmentService
 
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync()
     {
-        return await _repository.GetAllAsync();
+        return await _repository.GetAllAsync(a => a.Doctor!, a => a.Patient!);
     }
 
     public async Task<Appointment> CreateAppointmentAsync(Appointment appointment)
