@@ -20,3 +20,21 @@ Content-Type: application/json
   "lastName": "Novak",
   "personalNumber": "901212/1234"
 }
+
+### Регистрация
+POST http://localhost:5064/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@hospital.cz",
+  "password": "password123"
+}
+
+### Вход (получаем JWT-токен)
+POST http://localhost:5064/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@hospital.cz",
+  "password": "password123"
+}
