@@ -1,11 +1,13 @@
 using HospitalSystem.Domain.Entities;
 using HospitalSystem.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalSystem.Presentation.Controllers;
 
-[ApiController]
 [Route("api/[controller]")]
+[ApiController]
+[Authorize(Roles = "Admin")]
 public class PatientsController : ControllerBase
 {
     private readonly IPatientService _patientService;
