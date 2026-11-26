@@ -49,6 +49,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IMedicalRecordService, MedicalRecordService>();
 
 // Разрешаем запросы с локального Vue-фронтенда
 builder.Services.AddCors(options =>
@@ -113,6 +114,6 @@ using (var scope = app.Services.CreateScope())
         if (result.Succeeded)
             await userManager.AddToRoleAsync(admin, "Admin");
     }
-}
+}   
 
 app.Run();
